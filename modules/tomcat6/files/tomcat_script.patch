@@ -1,0 +1,55 @@
+--- tomcat6	2012-03-20 00:22:33.000000000 +0000
++++ tomcat6	2012-04-18 14:33:02.757517809 +0000
+@@ -27,7 +27,9 @@
+ CLASSPATH="${CLASSPATH}:$(build-classpath commons-daemon 2>/dev/null)"
+ 
+ if [ "$1" = "start" ]; then
+-  ${JAVACMD} $JAVA_OPTS $CATALINA_OPTS \
++  LOG="$2"
++  eval "set -- $JAVA_OPTS $CATALINA_OPTS"
++  ${JAVACMD} "$@" \
+     -classpath "$CLASSPATH" \
+     -Dcatalina.base="$CATALINA_BASE" \
+     -Dcatalina.home="$CATALINA_HOME" \
+@@ -36,12 +38,14 @@
+     -Djava.util.logging.config.file="${CATALINA_BASE}/conf/logging.properties" \
+     -Djava.util.logging.manager="org.apache.juli.ClassLoaderLogManager" \
+     org.apache.catalina.startup.Bootstrap start \
+-    >> ${2} 2>&1 &
++    >> "$LOG" 2>&1 &
+     if [ ! -z "$CATALINA_PID" ]; then
+       echo $! > $CATALINA_PID
+     fi
+ elif [ "$1" = "start-security" ]; then
+-  ${JAVACMD} $JAVA_OPTS $CATALINA_OPTS \
++  LOG="$2"
++  eval "set -- $JAVA_OPTS $CATALINA_OPTS"
++  ${JAVACMD} "$@" \
+     -classpath "$CLASSPATH" \
+     -Dcatalina.base="$CATALINA_BASE" \
+     -Dcatalina.home="$CATALINA_HOME" \
+@@ -52,19 +56,21 @@
+     -Djava.util.logging.config.file="${CATALINA_BASE}/conf/logging.properties" \
+     -Djava.util.logging.manager="org.apache.juli.ClassLoaderLogManager" \
+     org.apache.catalina.startup.Bootstrap start \
+-    >> ${2} 2>&1 &
++    >> "$LOG" 2>&1 &
+     if [ ! -z "$CATALINA_PID" ]; then
+       echo $! > $CATALINA_PID
+     fi
+ elif [ "$1" = "stop" ]; then
+-  ${JAVACMD} $JAVA_OPTS \
++  LOG="$2"
++  eval "set -- $JAVA_OPTS"
++  ${JAVACMD} "$@" \
+     -classpath "$CLASSPATH" \
+     -Dcatalina.base="$CATALINA_BASE" \
+     -Dcatalina.home="$CATALINA_HOME" \
+     -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" \
+     -Djava.io.tmpdir="$CATALINA_TMPDIR" \
+     org.apache.catalina.startup.Bootstrap stop \
+-    >> ${2} 2>&1
++    >> "$LOG" 2>&1
+ elif [ "$1" = "version" ]; then
+   ${JAVACMD} -classpath ${CATALINA_HOME}/lib/catalina.jar \
+     org.apache.catalina.util.ServerInfo

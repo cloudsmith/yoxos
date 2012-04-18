@@ -1,0 +1,44 @@
+ProxyPass /couchadmin/ http://localhost:5984/
+ProxyPass /accountadmin/ http://localhost:8080/accountadmin/
+ProxyPass /help/ http://localhost:5984/help/
+ProxyPass /users/ http://localhost:5984/_users/
+
+
+RewriteEngine on
+
+
+RewriteRule ^/etc/uuid$ http://localhost:5984/_uuids?count=1 [P]
+RewriteRule ^/etc/session$ http://localhost:5984/_session [P]
+RewriteRule ^/etc/yoxos.config$  http://localhost:5984/etc/yoxos.config [P]
+RewriteRule ^/etc/client.config$  http://localhost:5984/etc/client.config [P]
+RewriteRule ^/etc/branding/(.*)$  http://localhost:5984/etc/branding/$1 [P]
+
+
+### access to views
+RewriteRule ^/userdata/view/([A-Za-z0-9\_\-\.]+)/([A-Za-z0-9\_\-\.]+)$ http://localhost:5984/userdata/_design/$1/_view/$2 [P]
+
+## access to lists
+RewriteRule ^/userdata/list/([A-Za-z0-9\_\-\.]+)/([A-Za-z0-9\_\-\.]+)/([A-Za-z0-9\_\-\.]+)$ http://localhost:5984/userdata/_design/$1/_list/$2/$3 [P]
+
+RewriteRule ^/userdata(/.*)?$  http://localhost:5984/userdata$1 [P]
+
+
+<Location /places>
+    RequestHeader set Content-Type "application/json"
+</Location>
+
+RewriteRule ^/places/place.conf-([A-Za-z0-9\_\-\.\,]+)$ http://localhost:5984/places/place.conf-$1 [P]
+
+RewriteRule ^/places(/.+)$ http://localhost:5984/places/_design/query/_rewrite$1 [P]
+
+
+### access to views
+RewriteRule ^/users/view/([A-Za-z0-9\_\-\.]+)/([A-Za-z0-9\_\-\.]+)$ http://localhost:5984/_users/_design/$1/_view/$2 [P]
+
+## access to lists
+RewriteRule ^/users/list/([A-Za-z0-9\_\-\.]+)/([A-Za-z0-9\_\-\.]+)/([A-Za-z0-9\_\-\.]+)$ http://localhost:5984/_users/_design/$1/_list/$2/$3 [P]
+
+RewriteRule ^/users(/.*)?$  http://localhost:5984/_users$1 [P]
+
+
+RewriteRule ^/stats(/.*)?$  http://localhost:5984/stats$1 [P]

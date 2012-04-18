@@ -1,0 +1,1 @@
+CATALINA_OPTS="$CATALINA_OPTS -Dyoxos.monsoon.superusername=\"<%= couchdb_admin_login %>\" -Dyoxos.monsoon.superuserpasswd=\"<%= couchdb_admin_password %>\" -DyoxosRoot=\"<%= data_root %>\" -Dyoxos.accountadmin.port=5984 -Dyoxos.accountadmin.server=localhost -Xmx1024M -XX:PermSize=64m -XX:MaxPermSize=128m"

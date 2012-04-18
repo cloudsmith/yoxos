@@ -1,0 +1,12 @@
+name 'cloudsmith-yoxos'
+version '0.1.0'
+
+author 'mruzicka'
+license ''
+project_page ''
+source ''
+summary ''
+description ''
+dependency 'cloudsmith/apache2', '>=0.1.0'
+dependency 'cloudsmith/tomcat6', '>=0.1.0'
+dependency 'cloudsmith/couchdb', '>=0.1.0'

@@ -1,0 +1,10 @@
+name 'cloudsmith-tomcat6'
+version '0.1.0'
+
+author 'mruzicka'
+license ''
+project_page ''
+source ''
+summary 'Minimalistic Apache Tomcat'
+description ''
+dependency 'cloudsmith/patch', '>=0.1.0'

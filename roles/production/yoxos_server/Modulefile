@@ -1,0 +1,4 @@
+name 'cloudsmith-yoxos_server'
+version '0.0.0'
+
+dependency 'cloudsmith/yoxos', '>=0.1.0'

@@ -14,4 +14,7 @@ class tomcat6::variables {
 		'Debian' => '/etc/sysconfig/tomcat6',
 		default => '/etc/sysconfig/tomcat6',
 	}
+
+	$start_util = '/usr/local/lib/service_start_util.rb'
+	$wait_util = '/usr/local/lib/wait_for_server.rb'
 }

@@ -1,4 +1,4 @@
-require 'digest/sha1'
+require 'uri'
 
 URI_RESERVED_PATTERN = Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")
 

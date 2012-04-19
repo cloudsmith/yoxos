@@ -96,6 +96,7 @@ class couchdb(
 		enable => true,
 		hasrestart => true,
 		hasstatus => true,
+		require => File["${install_dir}/var/lib/couchdb", "${install_dir}/var/log/couchdb", "${install_dir}/var/run/couchdb", '/etc/logrotate.d/couchdb'],
 		subscribe => [Exec['build-couchdb'], File["${install_dir}/etc/couchdb/local.ini", '/etc/init.d/couchdb']],
 	}
 }

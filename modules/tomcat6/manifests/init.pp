@@ -1,7 +1,7 @@
 class tomcat6(
 	$address = '127.0.0.1',
 	$port = '8080',
-	$mangement_port = '8005'
+	$management_port = '8005'
 ) {
 	include patch
 	include tomcat6::variables
@@ -54,7 +54,7 @@ class tomcat6(
 
 	exec { 'tomcat6-start':
 		unless => "ruby \"${tomcat6::variables::start_util}\" \"${service_base64_encoded}\"",
-		command => "ruby \"${tomcat6::variables::wait_util}\" \"${address}\" \"${mangement_port}\"",
+		command => "ruby \"${tomcat6::variables::wait_util}\" \"${address}\" \"${management_port}\"",
 		path => ['/usr/local/bin', '/bin', '/usr/bin'],
 		require => [Exec['patch-script'], File[$tomcat6::variables::start_util, $tomcat6::variables::wait_util]],
 	}

@@ -70,13 +70,13 @@ class yoxos(
 		mode => 0644,
 	}
 
-        exec { 'couchdb-ready':
-                command => "ruby \"${tomcat6::variables::wait_util}\" \"localhost\" \"5984\"",
-                path => ['/usr/local/bin', '/bin', '/usr/bin'],
-                refreshonly => true,
-                require => File[$tomcat6::variables::wait_util],
+	exec { 'couchdb-ready':
+		command => "ruby \"${tomcat6::variables::wait_util}\" \"localhost\" \"5984\"",
+		path => ['/usr/local/bin', '/bin', '/usr/bin'],
+		refreshonly => true,
+		require => File[$tomcat6::variables::wait_util],
 		subscribe => Service['couchdb'],
-        }
+	}
 
 	$couchdb_admin_login_uri_escaped = uri_escape($couchdb_admin_login)
 	$couchdb_admin_password_uri_escaped = uri_escape($couchdb_admin_password)
@@ -88,13 +88,13 @@ class yoxos(
 		require => [Service['tomcat6', 'couchdb'], File["${tomcat6::variables::home_dir}/webapps/accountadmin.war"], Exec['tomcat-config', 'tomcat6-ready', 'couchdb-ready']],
 	}
 
-        file { "${apache2::variables::config_include_dir}/yoxos.conf":
-                ensure => present,
-                content => template('yoxos/yoxos.httpd.conf.erb'),
-                owner => root,
-                group => root,
-                mode => 0644,
-                require => [Package['apache2'], Service['tomcat6']],
-                notify => Service['apache2'],
-        }
+	file { "${apache2::variables::config_include_dir}/yoxos.conf":
+		ensure => present,
+		content => template('yoxos/yoxos.httpd.conf.erb'),
+		owner => root,
+		group => root,
+		mode => 0644,
+		require => [Package['apache2'], Service['tomcat6']],
+		notify => Service['apache2'],
+	}
 }

@@ -2,8 +2,6 @@ require 'base64'
 
 service = Base64.decode64(ARGV.shift())
 
-manifest = "service { '#{service}': ensure => running }"
-
 rd, wr = IO.pipe()
 
 # execute puppet apply
@@ -15,7 +13,7 @@ end
 rd.close()
 
 # pass the manifest to the puppet apply command via its standard input
-wr.write(manifest)
+wr.write("service { '#{service}': ensure => running }")
 wr.close()
 
 Process.waitpid(pid)

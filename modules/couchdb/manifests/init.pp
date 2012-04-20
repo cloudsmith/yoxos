@@ -68,8 +68,8 @@ class couchdb(
 
 	file { "${install_dir}/etc/couchdb/local.ini":
 		content => format_as_ini_file(template('couchdb/local.json.erb'), $ini_file_settings),
-		owner => root,
-		group => root,
+		owner => 'couchdb',
+		group => 'couchdb',
 		mode => 0644,
 		require => Exec['build-couchdb'],
 	}

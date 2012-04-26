@@ -3,6 +3,19 @@ require 'puppet/external/pson/common'
 require 'puppet/external/pson/version'
 require 'puppet/external/pson/pure'
 
+def read_data(files)
+  return nil if files.empty?
+
+  data = ''
+  files.each() do |file|
+    File.open(file, 'r') do |handle|
+      data << handle.read()
+    end
+  end
+
+  data
+end
+
 def send_request(method, request, data = nil)
   method = ('request_' << method).to_sym
   response = Net::HTTP.new('localhost', 8080).send(method, request, data)
@@ -31,7 +44,15 @@ case command
     exit data['setup'] ? 0 : 1
   when 'put'
     # run the setup
-    data = send_request(command, request)
+    data = read_data(ARGV)
+    data = send_request(command, request, data)
+    data = wait_for_completion(URI(data['information']))
+
+    exit data['status'].casecmp('Ok') == 0 ? 0 : 1
+  when 'post'
+    # add the slice
+    data = read_data(ARGV)
+    data = send_request(command, request, data)
     data = wait_for_completion(URI(data['information']))
 
     exit data['status'].casecmp('Ok') == 0 ? 0 : 1

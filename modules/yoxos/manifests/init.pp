@@ -15,6 +15,9 @@ class yoxos(
 
 	$setup_util = '/usr/local/lib/yoxos_setup_util.rb'
 
+	$couchdb_admin_login_uri_escaped = uri_escape($couchdb_admin_login)
+	$couchdb_admin_password_uri_escaped = uri_escape($couchdb_admin_password)
+
 	exec { "create-${data_root}":
 		unless => "test -d \"${data_root}\"",
 		command => "mkdir -p \"${data_root}\"",
@@ -78,9 +81,6 @@ class yoxos(
 		subscribe => Service['couchdb'],
 	}
 
-	$couchdb_admin_login_uri_escaped = uri_escape($couchdb_admin_login)
-	$couchdb_admin_password_uri_escaped = uri_escape($couchdb_admin_password)
-
 	exec { 'setup-yesa-documents':
 		unless => "ruby \"${setup_util}\" get /accountadmin/setup",
 		command => "ruby \"${setup_util}\" put \"/accountadmin/setup?username=${couchdb_admin_login_uri_escaped}&password=${couchdb_admin_password_uri_escaped}&overwrite=true\"",
@@ -96,5 +96,21 @@ class yoxos(
 		mode => 0644,
 		require => [Package['apache2'], Service['tomcat6']],
 		notify => Service['apache2'],
+	}
+
+	file { "${data_root}/../slice.properties":
+		ensure => present,
+		content => template('yoxos/slice.properties.erb'),
+		owner => root,
+		group => root,
+		mode => 0644,
+		require => File[$data_root],
+	}
+
+	exec { 'create-yesa-slice':
+		# unless => "ruby \"${setup_util}\" get /accountadmin/listSlices",
+		command => "ruby \"${setup_util}\" post \"/accountadmin/createSlice?username=${couchdb_admin_login_uri_escaped}&password=${couchdb_admin_password_uri_escaped}\" \"${data_root}/../slice.properties\"",
+		path => ['/usr/local/bin', '/bin', '/usr/bin'],
+		require => [Exec['setup-yesa-documents'], File["${data_root}/../slice.properties"]],
 	}
 }
